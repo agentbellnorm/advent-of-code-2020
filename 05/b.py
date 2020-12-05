@@ -19,11 +19,10 @@ with open("./05/real.in") as f:
     lowest_seat_id = float("inf")
     sum_seat_ids = 0
     for boarding_pass in f.readlines():
-        boarding_pass = boarding_pass.rstrip()
-        row_mask = boarding_pass[:7].replace("F", "0").replace("B", "1")
+        row_mask = boarding_pass[:7].replace("F", "0").replace("B", "1").rstrip()
         row = bsp(range(128), row_mask)
 
-        column_mask = boarding_pass[7:11].replace("L", "0").replace("R", "1")
+        column_mask = boarding_pass[7:11].replace("L", "0").replace("R", "1").rstrip()
         column = bsp(range(8), column_mask)
 
         seat_id = row * 8 + column
@@ -32,4 +31,4 @@ with open("./05/real.in") as f:
         highest_seat_id = seat_id if seat_id > highest_seat_id else highest_seat_id
         lowest_seat_id = seat_id if seat_id < lowest_seat_id else lowest_seat_id
 
-    print(sum(range(lowest_seat_id, highest_seat_id + 1)) - sum_seat_ids)  # 517
+    assert 517 == sum(range(lowest_seat_id, highest_seat_id + 1)) - sum_seat_ids

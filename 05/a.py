@@ -27,4 +27,4 @@ with open("./05/real.in") as f:
         seat_id = row * 8 + column
         highest = seat_id if seat_id > highest else highest
 
-    print(highest) # 832
+    assert highest == 832
