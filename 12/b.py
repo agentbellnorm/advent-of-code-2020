@@ -37,10 +37,8 @@ def move_waypoint(state, direction, distance):
 
 
 def move_to_waypoint_times(state, times):
-    dx = state[waypoint_x] * times
-    dy = state[waypoint_y] * times
-    state[ship_x] += dx
-    state[ship_y] += dy
+    state[ship_x] += state[waypoint_x] * times
+    state[ship_y] += state[waypoint_y] * times
 
     return state
 
