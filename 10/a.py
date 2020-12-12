@@ -3,7 +3,6 @@ with open("./10/real.in") as f:
     jolts.append(0)
     jolts.sort()
     jolts.append(jolts[-1] + 3)
-    print(jolts)
     one = 0
     three = 0
 
@@ -16,5 +15,4 @@ with open("./10/real.in") as f:
         elif next_jolt - jolt == 3:
             three += 1
 
-    print("one: {}, three: {}".format(one, three))
-    print(one * three)
+    assert one * three == 1625
