@@ -16,15 +16,6 @@ def get_row(seats, row_numer):
     return "".join([char * 10 for char in "."])
 
 
-""" def count_taken_adj(seatmap, x, y):
-    n = 0
-    for adj_x, adj_y in get_adjacent(x, y, len(seatmap[0]), len(seatmap)):
-        if is_taken(get_row(seatmap, adj_y), adj_x):
-            n += 1
-    return n
- """
-
-
 def count_visible_taken(seatmap, x, y):
     horiz_right = []
     horiz_left = []
@@ -38,31 +29,33 @@ def count_visible_taken(seatmap, x, y):
     xmax = len(seatmap[0])
     ymax = len(seatmap)
 
-    for _x, _y in zip_longest(x, xmax), range(y, ymax), fillvalue=10000):
-        print("_x: {}, _y: {}".format(_x, _y))
-        opposite_y = y - (_y - y)
-        opposite_x = x - (_x - x)
-        if opposite_x >= 0 and _y < ymax:
-            bottom_left.append((opposite_x, _y))
-            horiz_left.append((opposite_x, y))
+    for _x in range(x + 1, xmax):
+        horiz_right.append((_x, y))
 
-        if opposite_y >= 0 and _x < xmax:
-            vertical_up.append((x, opposite_y))
-            top_right.append((_x, opposite_y))
+    for _x in reversed(range(x)):
+        horiz_left.append((_x, y))
 
-        if opposite_x >= 0 and opposite_y >= 0:
-            top_left.append((opposite_x, opposite_y))
+    for _y in range(y + 1, ymax):
+        vertical_down.append((x, _y))
 
-        if _x < xmax:
-            horiz_right.append((_x, y))
-        else:
-            print(_x)
+    for _y in reversed(range(y)):
+        vertical_up.append((x, _y))
 
-        if _y < ymax:
+    for _x, _y in zip_longest(range(x + 1, xmax), range(y + 1, ymax)):
+        if _x is not None and _y is not None:
             bottom_right.append((_x, _y))
 
-        if _x < xmax and _y < ymax:
-            vertical_down.append((x, _y))
+    for _x, _y in zip_longest(range(x + 1, xmax), reversed(range(y))):
+        if _x is not None and _y is not None:
+            top_right.append((_x, _y))
+
+    for _x, _y in zip_longest(reversed(range(x)), range(y + 1, ymax)):
+        if _x is not None and _y is not None:
+            bottom_left.append((_x, _y))
+
+    for _x, _y in zip_longest(reversed(range(x)), reversed(range(y))):
+        if _x is not None and _y is not None:
+            top_left.append((_x, _y))
 
     to_check = []
 
@@ -74,30 +67,18 @@ def count_visible_taken(seatmap, x, y):
     to_check.append(bottom_left)
     to_check.append(horiz_left)
     to_check.append(top_left)
-    print("x: {}, y: {}".format(x, y))
-    print("vertical_up: {}".format(vertical_up))
-    print("top_right: {}".format(top_right))
-    print("horiz_right: {}".format(horiz_right))
-    print("bottom_right: {}".format(bottom_right))
-    print("vertical_down: {}".format(vertical_down))
-    print("bottom_left: {}".format(bottom_left))
-    print("horiz_left: {}".format(horiz_left))
-    print("top_left: {}".format(top_left))
+
     visible_taken = 0
 
     for line_of_sight in to_check:
         for x, y in line_of_sight:
             if is_taken(seatmap[y], x):
-                # print("saw ({}, {})".format(x, y))
                 visible_taken += 1
+                break
+            elif is_open(seatmap[y], x):
                 break
 
     return visible_taken
-
-
-"""     for x, y in to_check:
-        if is_taken(seatmap[y], x):
-            visible_taken += 1 """
 
 
 def next_seat_map(seatmap):
@@ -110,7 +91,6 @@ def next_seat_map(seatmap):
                 new_row += "."
             else:
                 taken_adj = count_visible_taken(rows, x, y)
-                print("({}, {}) taken adj: {}".format(x, y, taken_adj))
                 if is_open(rows[y], x) and taken_adj == 0:
                     new_row += "#"
                 elif is_taken(rows[y], x) and taken_adj >= 5:
@@ -122,21 +102,13 @@ def next_seat_map(seatmap):
     return "\n".join(new_seat_map)
 
 
-with open("./11/test.in") as f:
-    # print(get_adjacent(2, 2, 5, 5))
+with open("./11/real.in") as f:
     seats = f.read()
-    print(seats)
-    print("\n")
     current = next_seat_map(seats)
-    print(current)
-""" 
-    print("\n")
-    current = next_seat_map(current)
-    print(current)
     while True:
         next_map = next_seat_map(current)
         if current == next_map:
             break
         current = next_map
 
-    print(current.count("#")) """
+    assert 2138 == current.count("#")
