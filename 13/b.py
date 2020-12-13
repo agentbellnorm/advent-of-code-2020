@@ -3,8 +3,7 @@ import itertools
 
 
 def departs(line, time):
-    line_number, offset = line
-    return (time + offset) % line_number == 0
+    return (time + line[1]) % line[0] == 0
 
 
 with open("./13/test.in") as f:
@@ -14,10 +13,9 @@ with open("./13/test.in") as f:
     for i, line in enumerate(notes.split(",")):
         if line != "x":
             bus_lines.append((int(line), i))
-    print(bus_lines)
 
-    result = None
-    for time in itertools.count(int(start_time)):
+    first_line = bus_lines[0][0]
+    for time in itertools.count(0, first_line):
         if all(map(lambda line: departs(line, time), bus_lines)):
             print(time)
             break
